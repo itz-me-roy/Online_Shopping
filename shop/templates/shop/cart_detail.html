@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Your cart · Shop{% endblock %}
+
+{% block content %}
+<h1>Your cart</h1>
+
+{% if cart|length == 0 %}
+  <p>Your cart is empty. <a href="{% url 'shop:product_list' %}">Browse products</a>.</p>
+{% else %}
+  <table class="cart-table">
+    <thead>
+      <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>${{ item.price }}</td>
+        <td>
+          <form action="{% url 'shop:cart_add' item.product.id %}" method="post" class="inline-form">
+            {% csrf_token %}
+            {{ item.update_quantity_form.quantity }}
+            {{ item.update_quantity_form.override }}
+            <button type="submit" class="btn btn-secondary">Update</button>
+          </form>
+        </td>
+        <td>${{ item.total_price }}</td>
+        <td>
+          <form action="{% url 'shop:cart_remove' item.product.id %}" method="post" class="inline-form">
+            {% csrf_token %}
+            <button type="submit" class="link-button" style="color:#e53e3e;">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="cart-total">Total: <strong>${{ cart.get_total_price }}</strong></p>
+  <a href="{% url 'shop:product_list' %}" class="btn btn-secondary">Continue shopping</a>
+  <a href="{% url 'shop:order_create' %}" class="btn">Checkout</a>
+{% endif %}
+{% endblock %}

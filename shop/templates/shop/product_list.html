@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category.name }}{% else %}All products{% endif %} · Shop{% endblock %}
+
+{% block content %}
+<div class="category-bar">
+  <a href="{% url 'shop:product_list' %}" class="{% if not category %}active{% endif %}">All</a>
+  {% for c in categories %}
+    <a href="{{ c.get_absolute_url }}" class="{% if category.slug == c.slug %}active{% endif %}">{{ c.name }}</a>
+  {% endfor %}
+</div>
+
+<h1>{% if category %}{{ category.name }}{% else %}All products{% endif %}</h1>
+
+{% if products %}
+<div class="product-grid">
+  {% for product in products %}
+    <div class="product-card">
+      <a href="{{ product.get_absolute_url }}">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <div class="product-thumb"></div>
+        {% endif %}
+        <h3>{{ product.name }}</h3>
+      </a>
+      <p class="price">${{ product.price }}</p>
+      {% if product.in_stock %}
+        <a href="{{ product.get_absolute_url }}" class="btn">View</a>
+      {% else %}
+        <span class="out-of-stock">Out of stock</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+  <p>No products here yet — add some from the Django admin.</p>
+{% endif %}
+{% endblock %}

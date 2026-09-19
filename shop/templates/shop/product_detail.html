@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} · Shop{% endblock %}
+
+{% block content %}
+<p><a href="{% url 'shop:product_list' %}">&larr; Back to all products</a></p>
+
+<div class="product-detail">
+  <div class="image-col">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% else %}
+      <div class="product-thumb" style="height:320px;"></div>
+    {% endif %}
+  </div>
+  <div class="info-col">
+    <h1>{{ product.name }}</h1>
+    <p class="price">${{ product.price }}</p>
+    <p>{{ product.description|linebreaks }}</p>
+
+    {% if product.in_stock %}
+      <p>{{ product.stock }} in stock</p>
+      <form action="{% url 'shop:cart_add' product.id %}" method="post">
+        {% csrf_token %}
+        {{ cart_form }}
+        <button type="submit" class="btn">Add to cart</button>
+      </form>
+    {% else %}
+      <p class="out-of-stock">Out of stock</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
