@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-change-this-key-before-deploying'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','.vercel.app']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
